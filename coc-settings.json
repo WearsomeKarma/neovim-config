@@ -1,0 +1,19 @@
+{
+    "languageserver": {
+        "ocaml-lsp": {
+            "command": "opam",
+            "rootPatterns":["*.ml"],
+            "args": ["config", "exec", "--", "ocamllsp"],
+            "filetypes": ["ocaml", "reason"]
+        },
+        "arduino":{ 
+            "command":"/home/shalidor/GitRepos/arduino-language-server/arduino-language-server",
+            "rootPatterns":["*.ino"],
+            "filetypes":["arduino"],
+            "_args":["-cli", "/usr/bin/arduino-cli", "-clangd", "/usr/bin/clangd", "-cli-config", "/home/shalidor/.arduino15/arduino-cli.yaml", "-fqbn", "adafruit:samd:adafruit_pygamer_m4"],
+            "args":["-cli", "/usr/bin/arduino-cli", "-clangd", "/bin/clangd", "-cli-config", "/home/shalidor/.arduino15/arduino-cli.yaml", "-fqbn", "arudino:samd:nano_33_iot", "-log"]
+        }
+    },
+    "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/15.0.6/clangd_15.0.6/bin/clangd",
+    "inlayHint.enable": false
+}

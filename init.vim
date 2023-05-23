@@ -19,10 +19,15 @@ Plug 'preservim/nerdtree'
 Plug 'OmniSharp/omnisharp-vim'
 Plug 'dense-analysis/ale'
 
+" Plug 'neovim/nvim-lspconfig'
+
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'puremourning/vimspector'
 
 Plug 'mfussenegger/nvim-jdtls'
+Plug 'jacoborus/tender.vim'
+
+" Plug 'github/copilot.vim'
 
 " Plug 'neovim/nvim-lspconfig'
 
@@ -31,6 +36,9 @@ Plug 'mfussenegger/nvim-jdtls'
 
 call plug#end()
 
+" lua <<EOF
+" require'lspconfig'.clangd.setup{}
+" EOF
 
 let g:ale_fixers = ['uncrustify']
 
@@ -72,23 +80,43 @@ map <F8> <Plug>VimspectorStepOver
 map <F9> <Plug>VimspectorStepInto
 map <F10> <Plug>VimspectorStepOut
 
+if &filetype == 'cs'
+    map <leader>. <cmd>OmniSharpGotoDefinition<cr>
+    map <leader>/ <cmd>OmniSharpFindUsages<cr>
+    map <leader>; <cmd>OmniSharpFixUsings<cr>
+    map <leader>' <cmd>OmniSharpGetCodeActions<cr> 
+    map <leader>r <cmd>OmniSharpRename<cr>
+    map <leader>y "+y
+    map <leader>p "*p
+    map <C-Up> <cmd>OmniSharpNavigateUp<cr>
+    map <C-Down> <cmd>OmniSharpNavigateDown<cr>
+else
+    autocmd BufEnter * ALEDisable
+    map <leader>. <Plug>(coc-definition)
+    map <leader>/ <Plug>(coc-references)
+    map <leader>; <Plug>(coc-fix-current)
+    map <leader>' <Plug>(coc-codeaction-selected)
+    map <leader>r <Plug>(coc-rename)
+    map <leader>y "+y
+    map <leader>p "*p
+    map <C-Up> <Plug>(coc-diagnostic-prev)
+    map <C-Down> <Plug>(coc-diagnostic-next)
+endif
+
+map <silent><script><expr> <leader><Shift> <Plug>(copilot-next)
+map <leader>m <Plug>(copilot-discard)
+imap <silent><script><expr> <leader><Tab> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+
 autocmd BufEnter NERD_tree_* | execute 'normal R'
 autocmd VimEnter * NERDTree
 
 map <leader>v <cmd>NERDTreeToggle<cr>
 
-map <leader>. <cmd>OmniSharpGotoDefinition<cr>
-map <leader>/ <cmd>OmniSharpFindUsages<cr>
-map <leader>; <cmd>OmniSharpFixUsings<cr>
-map <leader>' <cmd>OmniSharpGetCodeActions<cr> 
-map <leader>r <cmd>OmniSharpRename<cr>
-map <leader>y "+y
-map <leader>p "*p
-map <C-Up> <cmd>OmniSharpNavigateUp<cr>
-map <C-Down> <cmd>OmniSharpNavigateDown<cr>
-
 inoremap <silent><expr> <tab> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<TAB>"
 inoremap <silent><expr> <cr> "\<c-g>u\<CR>"
+
+map <leader>' <Plug>(coc-codeaction-selected)
 
 if has('nvim-0.4.0') || has('patch-8.2.0750')
   nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
